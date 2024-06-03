@@ -7,12 +7,11 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var app = express();
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(__dirname));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
@@ -23,6 +22,10 @@ const db = new sqlite3.Database('db/sqlite.db', (err) => {
         return console.error(err.message);
     }
     console.log('Connected to the SQlite database.');
+});
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../', 'index.html'));  // Adjust the path as needed
 });
 
 app.get('/api/data', (req, res) => {
